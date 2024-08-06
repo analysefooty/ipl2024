@@ -11,8 +11,8 @@ import requests
 
 
 # Get the current credentials
-cnx = st.connection("snowflake")
-session = cnx.session()
+#cnx = st.connection("snowflake")
+#session = cnx.session()
 #session = get_active_session()
 conn = connect(
     account=st.secrets["snowflake"]["account"],
