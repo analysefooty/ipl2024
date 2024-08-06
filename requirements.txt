@@ -1,6 +1,6 @@
 #requirement.txt
 snowflake-connector-python
-streamlit-snowflake-connector
+#streamlit-snowflake-connector
 streamlit==1.31.1
 requests
 pandas
