@@ -15,12 +15,12 @@ import requests
 #session = cnx.session()
 #session = get_active_session()
 conn = connect(
-    account=st.secrets.account,
-    user=st.secrets.user,
-    password=st.secrets.password,
-    warehouse=st.secrets.warehouse,
-    database=st.secrets.database,
-    schema=st.secrets.schema
+       account=st.secrets["account"],
+    user=st.secrets["user"],
+    password=st.secrets["password"],
+    warehouse=st.secrets["warehouse"],
+    database=st.secrets["database"],
+    schema=st.secrets["schema"]
 )
 #teams query
 cursor = conn.cursor()
@@ -78,6 +78,7 @@ if submitted:
 
 # Adjust layout
         plt.tight_layout()
-
+        cursor.close()
+        conn.close()
 # Display the plot in Streamlit
         st.pyplot(fig)
