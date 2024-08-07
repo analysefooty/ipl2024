@@ -55,8 +55,8 @@ if submitted:
     #try:
         runs_query = f"SELECT (over_number+1) as over, TRUNCATE(AVG(total_runs),1) as RPO,'{team_selected}' as team  from CRICKETDB.C50.runs_by_over  where team_name ='{team_selected}' group by over_number"
         cursor.execute(runs_query)
-        runs_df = cursor.fetch_pandas_all()
-        runs_pandas_df = runs_df.to_pandas()
+        runs_pandas_df = cursor.fetch_pandas_all()
+        #runs_pandas_df = runs_df.to_pandas()
         #editable_df = st.data_editor(runs_df) 
         overall_df = pd.concat([rpo_df,runs_pandas_df],ignore_index=True)
         overall_df_pivot = overall_df.pivot(index='OVER', columns='TEAM',values='RPO').fillna(0)
