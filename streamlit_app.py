@@ -24,6 +24,7 @@ conn = connect(
     warehouse="COMPUTE_WH",#os.environ.get("SNOWFLAKE_WAREHOUSE"),
     database="CRICKETDB",#os.environ.get("SNOWFLAKE_DATABASE"),
     schema="C50",#os.environ.get("SNOWFLAKE_SCHEMA")
+    role="SYSADMIN"
 )
 #conn = connect(
 #       account=st.secrets["account"],
