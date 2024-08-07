@@ -38,21 +38,24 @@ conn = connect(
 cursor = conn.cursor()
 
 team_query = f"SELECT distinct TEAM_NAME from CRICKETDB.C50.runs_by_over"
-team_df = cursor.execute(team_query)#.to_pandas()
+cursor.execute(team_query)#.to_pandas()
+team_df = cursor.fetch_pandas_all()
 
 # Write directly to the app
 st.title("IPL 2024 Data")
 team_selected = st.selectbox("Select a team: ", team_df )
 
 ipl_rpo_avg_query = f"SELECT (over_number+1) as over, TRUNCATE(AVG(total_runs),1) as RPO, 'overall' as team from CRICKETDB.C50.runs_by_over group by over_number"
-rpo_df = cursor.execute(ipl_rpo_avg_query).to_pandas()
+cursor.execute(ipl_rpo_avg_query)
+rpo_df = cursor.fetch_pandas_all()
 submitted = st.button('Submit')
 #st.success('someone clicked the button')
 if submitted:
     
     #try:
         runs_query = f"SELECT (over_number+1) as over, TRUNCATE(AVG(total_runs),1) as RPO,'{team_selected}' as team  from CRICKETDB.C50.runs_by_over  where team_name ='{team_selected}' group by over_number"
-        runs_df = cursor.execute(runs_query)
+        cursor.execute(runs_query)
+        runs_df = cursor.fetch_pandas_all()
         runs_pandas_df = runs_df.to_pandas()
         #editable_df = st.data_editor(runs_df) 
         overall_df = pd.concat([rpo_df,runs_pandas_df],ignore_index=True)
