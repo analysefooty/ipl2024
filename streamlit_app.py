@@ -38,7 +38,7 @@ conn = connect(
 cursor = conn.cursor()
 
 team_query = f"SELECT distinct TEAM_NAME from CRICKETDB.C50.runs_by_over"
-team_df = cursor.execute(team_query).to_pandas()
+team_df = cursor.execute(team_query)#.to_pandas()
 
 # Write directly to the app
 st.title("IPL 2024 Data")
