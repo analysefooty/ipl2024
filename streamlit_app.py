@@ -15,12 +15,12 @@ import requests
 #session = cnx.session()
 #session = get_active_session()
 conn = connect(
-    account=st.secrets["snowflake"]["account"],
-    user=st.secrets["snowflake"]["user"],
-    password=st.secrets["snowflake"]["password"],
-    warehouse=st.secrets["snowflake"]["warehouse"],
-    database=st.secrets["snowflake"]["database"],
-    schema=st.secrets["snowflake"]["schema"]
+    account=st.secrets.account,
+    user=st.secrets.user,
+    password=st.secrets.password,
+    warehouse=st.secrets.warehouse,
+    database=st.secrets.database,
+    schema=st.secrets.schema
 )
 #teams query
 cursor = conn.cursor()
