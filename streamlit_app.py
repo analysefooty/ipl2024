@@ -18,12 +18,12 @@ import os
 
 
 conn = connect(
-    account="vpb33500.us-west-2"#os.environ.get("SNOWFLAKE_ACCOUNT"),
-    user="ravirami2"#os.environ.get("SNOWFLAKE_USER"),
-    password="Campnou77$"#os.environ.get("SNOWFLAKE_PASSWORD"),
-    warehouse="COMPUTE_WH"#os.environ.get("SNOWFLAKE_WAREHOUSE"),
-    database="CRICKETDB"#os.environ.get("SNOWFLAKE_DATABASE"),
-    schema="C50"#os.environ.get("SNOWFLAKE_SCHEMA")
+    account="vpb33500.us-west-2",#os.environ.get("SNOWFLAKE_ACCOUNT"),
+    user="ravirami2",#os.environ.get("SNOWFLAKE_USER"),
+    password="Campnou77$",#os.environ.get("SNOWFLAKE_PASSWORD"),
+    warehouse="COMPUTE_WH",#os.environ.get("SNOWFLAKE_WAREHOUSE"),
+    database="CRICKETDB",#os.environ.get("SNOWFLAKE_DATABASE"),
+    schema="C50",#os.environ.get("SNOWFLAKE_SCHEMA")
 )
 #conn = connect(
 #       account=st.secrets["account"],
