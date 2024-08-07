@@ -8,20 +8,31 @@ import matplotlib.pyplot as plt
 #from snowflake.snowpark.session import Session
 from snowflake.connector import connect
 import requests
-
+import os
 
 # Get the current credentials
 #cnx = st.connection("snowflake")
 #session = cnx.session()
 #session = get_active_session()
+
+
+
 conn = connect(
-       account=st.secrets["account"],
-    user=st.secrets["user"],
-    password=st.secrets["password"],
-    warehouse=st.secrets["warehouse"],
-    database=st.secrets["database"],
-    schema=st.secrets["schema"]
+    account=os.environ.get("SNOWFLAKE_ACCOUNT"),
+    user=os.environ.get("SNOWFLAKE_USER"),
+    password=os.environ.get("SNOWFLAKE_PASSWORD"),
+    warehouse=os.environ.get("SNOWFLAKE_WAREHOUSE"),
+    database=os.environ.get("SNOWFLAKE_DATABASE"),
+    schema=os.environ.get("SNOWFLAKE_SCHEMA")
 )
+#conn = connect(
+#       account=st.secrets["account"],
+#    user=st.secrets["user"],
+#    password=st.secrets["password"],
+#    warehouse=st.secrets["warehouse"],
+#    database=st.secrets["database"],
+#    schema=st.secrets["schema"]
+#)
 #teams query
 cursor = conn.cursor()
 
