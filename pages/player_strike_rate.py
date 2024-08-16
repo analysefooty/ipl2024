@@ -67,7 +67,7 @@ avg_SR = batsman_avg_SR["STRIKE_RATE"][0]
 if submitted:
 
     # try:
-    batsman_SR_by_line_length_query = f"select truncate(sum(batsman_runs)/count(distinct id),1)*100 as strike_rate,bowling_length_name as length,bowling_line_name as line from ipl where batsman_name = '{batsman_selected}' group by line, length;"
+    batsman_SR_by_line_length_query = f"select truncate(truncate(sum(batsman_runs)/count(distinct id),3)*100,1) as strike_rate,count(distinct id) as balls_faced, bowling_length_name as length,bowling_line_name as line from ipl where batsman_name = '{batsman_selected}' and bowling_length_name not in ('Beamer', 'Half Tracker') and bowling_line_name not in ('Wide Down Leg') group by line, length;"
     cursor.execute(batsman_SR_by_line_length_query)
     batsman_avg_SR_line_length_df = cursor.fetch_pandas_all()
 
@@ -76,42 +76,70 @@ if submitted:
     batsman_avg_SR_line_length_df["strike_rate"] = pd.to_numeric(
         batsman_avg_SR_line_length_df["STRIKE_RATE"], errors="coerce"
     )
+    batsman_avg_SR_line_length_df["balls_faced"] = pd.to_numeric(
+        batsman_avg_SR_line_length_df["BALLS_FACED"], errors="coerce"
+    )
     strike_rates_grid = batsman_avg_SR_line_length_df.pivot(
         index="LENGTH", columns="LINE", values="STRIKE_RATE"
     )
+    balls_faced_data = batsman_avg_SR_line_length_df.pivot(
+        index="LENGTH", columns="LINE", values="BALLS_FACED"
+    )
     # Convert all values in the grid to numeric, replacing any non-convertible values with NaN
     strike_rates_grid = strike_rates_grid.apply(pd.to_numeric, errors="coerce")
+    balls_faced_data = balls_faced_data.apply(pd.to_numeric, errors="coerce")
 
     # Fill NaN values with 0 or another appropriate value
-    strike_rates_grid = strike_rates_grid.fillna(0)
+    strike_rates_grid = strike_rates_grid.fillna("")
+    balls_faced_data = balls_faced_data.fillna("")
 
-    player_data = strike_rates_grid.values
+    player_data = strike_rates_grid.astype(str).values
+    balls_faced_data = balls_faced_data.astype(str).values
 
     # Get row and column labels
     lengths = strike_rates_grid.index.to_list()
     lines = strike_rates_grid.columns.to_list()
 
+    def format_cell(strike_rate, balls):
+        try:
+            sr = float(strike_rate)
+            bf = int(float(balls))
+            return f"{sr:.1f}\n({bf})"
+        except ValueError:
+            return "N/A"
+
+    annotations = np.frompyfunc(format_cell, 2, 1)(player_data, balls_faced_data)
+
+    # Convert player_data to float for the mask
+
+    player_data_float = np.array(
+        [
+            [float(x) if x.replace(".", "", 1).isdigit() else np.nan for x in row]
+            for row in player_data
+        ]
+    )
+
     avg_SR = pd.to_numeric(avg_SR)
-    mask = player_data > avg_SR
-    zero_mask = player_data == 0
+    mask = player_data_float > avg_SR
+    zero_mask = player_data_float == 0
     mask = mask | zero_mask
 
-    fig, ax = plt.subplots(figsize=(12, 9))
+    fig, ax = plt.subplots(figsize=(14, 10))  # Increased figure size
     sns.heatmap(
-        player_data,
-        annot=True,
-        fmt=".1f",
-        cmap="Reds",
+        player_data_float,
+        annot=annotations,
+        fmt="",
+        cmap="RdYlGn",
         center=avg_SR,
         linewidths=0.5,
         mask=~mask,
         ax=ax,
     )
     sns.heatmap(
-        player_data,
-        annot=True,
-        fmt=".1f",
-        cmap="Reds_r",
+        player_data_float,
+        annot=annotations,
+        fmt="",
+        cmap="RdYlGn_r",
         center=avg_SR,
         linewidths=0.5,
         cbar=False,
