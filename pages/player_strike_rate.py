@@ -56,7 +56,6 @@ batsman_selected = st.selectbox("Select a batsman: ", batsman_df)
 batsman_strike_rate_query = f"select truncate(sum(batsman_runs)/count(distinct id),1)*100 as strike_rate from ipl where batsman_name = '{batsman_selected}'"
 submitted = st.button("Submit")
 
-
 cursor.execute(batsman_strike_rate_query)
 batsman_avg_SR = cursor.fetch_pandas_all()
 
@@ -120,6 +119,10 @@ if submitted:
     )
 
     avg_SR = pd.to_numeric(avg_SR)
+
+    vmin = np.nanmin(player_data_float)
+    vmax = np.nanmax(player_data_float)
+
     mask = player_data_float > avg_SR
     zero_mask = player_data_float == 0
     mask = mask | zero_mask
@@ -131,23 +134,13 @@ if submitted:
         fmt="",
         cmap="RdYlGn",
         center=avg_SR,
+        vmin=vmin,
+        vmax=vmax,
         linewidths=0.5,
-        mask=~mask,
-        ax=ax,
-    )
-    sns.heatmap(
-        player_data_float,
-        annot=annotations,
-        fmt="",
-        cmap="RdYlGn_r",
-        center=avg_SR,
-        linewidths=0.5,
-        cbar=False,
-        mask=mask,
+        # mask=~mask,
         ax=ax,
     )
 
-    # Customize the colors
     cbar = ax.collections[0].colorbar
     cbar.set_label("Strike Rate")
 
